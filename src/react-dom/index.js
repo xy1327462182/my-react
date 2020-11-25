@@ -88,6 +88,13 @@ function createDomForComponentInstance(instance) {
   //获取到虚拟DOM并挂载到实例上 因为类组件的render方法中return的就是jsx对象
   //所以直接调用render方法获取获取虚拟DOM
   instance.vdom = instance.render()
+
+  //如果实例上没有挂载过DOM，则是第一次创建
+  //之后再发生更新，则不会进入到该判断分支，就不会执行componentDidMount方法
+  if (!instance.dom) {
+    typeof instance.componentDidMount == 'function' && instance.componentDidMount()
+  }
+
   //生成真实的DOM节点，并且也挂载到实例上
   instance.dom = createDom(instance.vdom)
 }
